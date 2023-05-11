@@ -80,6 +80,6 @@ INSERT INTO products (name, price, stock)
         ('ライス(中)', 140, 100),
         ('ライス(小)', 90, 100);
 
-INSERT INTO users (id, display_name, email, password, point, is_admin)
+INSERT INTO users (display_name, email, password, point, is_admin)
     VALUES
-        (1, 'demo', 'demo', 'demo', 10000, true);
+        ('demo', 'demo', 'demo', 10000, true);
