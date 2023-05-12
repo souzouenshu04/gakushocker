@@ -1,0 +1,17 @@
+@startuml
+
+autonumber
+actor User
+
+User -> Client : アクセスする
+User <- Client : ログインページを表示
+User -> Client : パスワード等を入力
+Client -> Server : メールアドレス、パスワードを送信
+database DB
+Server -> DB : ユーザー情報を要求
+Server <- DB : ユーザー情報を返す
+Server --> Server : パスワードを検証
+Client <- Server : jwtをcookieにセット
+User <-- Client : 認証が必要なページを表示
+
+@enduml

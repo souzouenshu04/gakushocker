@@ -1,4 +1,4 @@
-@startuml usecase
+@startuml
 skinparam actorStyle awesome
 left to right direction
 
@@ -29,6 +29,7 @@ usecase サインアップする
 注文内容を確定する ..> 注文内容を選択する : 先行
 注文内容を更新する ..> 注文内容を確定する : 先行
 注文内容を削除する ..> 注文内容を確定する : 先行
+注文内容を確認する ..> 注文内容を確定する : 先行
 
 
 @enduml
