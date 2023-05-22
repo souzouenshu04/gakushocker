@@ -9,12 +9,12 @@ use axum::{
     response::{IntoResponse, Response},
     {extract::Json, Router},
 };
-use axum_extra::extract::cookie::{Cookie, CookieJar};
 use chrono::Utc;
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use tower_cookies::{Cookie, Cookies};
 
 #[derive(Deserialize)]
 struct SignedUser {
@@ -97,14 +97,14 @@ pub fn auth_router() -> Router {
 }
 
 async fn sign_in(
-    jar: CookieJar,
+    cookies: Cookies,
     Json(payload): Json<SignedUser>,
-) -> Result<(CookieJar, Json<User>), AuthError> {
+) -> Result<Json<User>, AuthError> {
     if payload.email.is_empty() || payload.password.is_empty() {
         return Err(AuthError::MissingCredentials);
     }
     let pool = database::db_pool().await;
-    let repo = RepositoryProvider(pool);
+    let repo = RepositoryProvider(pool.into());
     let found_user = match user::find_user_by_email(&repo, payload.email.clone()).await {
         Ok(user) => user,
         Err(_) => return Err(AuthError::WrongCredentials),
@@ -122,26 +122,24 @@ async fn sign_in(
     let token = encode(&Header::default(), &claims, &KEYS.encoding)
         .map_err(|_| AuthError::TokenCreation)
         .expect("missed encoding claims");
-    Ok((
-        jar.add(
-            Cookie::build("token", token)
-                .http_only(true)
-                .path("/")
-                .finish(),
-        ),
-        Json(authorized_user),
-    ))
+    cookies.add(
+        Cookie::build("token", token)
+            .http_only(true)
+            .path("/")
+            .finish(),
+    );
+    Ok(Json(authorized_user))
 }
 
 async fn sign_up(
-    jar: CookieJar,
+    cookies: Cookies,
     Json(payload): Json<UserInput>,
-) -> Result<(CookieJar, Json<User>), AuthError> {
+) -> Result<Json<User>, AuthError> {
     if payload.email.is_empty() || payload.password.is_empty() {
         return Err(AuthError::MissingCredentials);
     }
     let pool = database::db_pool().await;
-    let repo = RepositoryProvider(pool);
+    let repo = RepositoryProvider(pool.into());
     let user = match user::save(&repo, payload).await {
         Ok(user) => user,
         Err(_) => return Err(AuthError::WrongCredentials),
@@ -150,18 +148,16 @@ async fn sign_up(
     let token = encode(&Header::default(), &claims, &KEYS.encoding)
         .map_err(|_| AuthError::TokenCreation)
         .expect("missed encoding claims");
-    Ok((
-        jar.add(
-            Cookie::build("token", token)
-                .http_only(true)
-                .path("/")
-                .finish(),
-        ),
-        Json(user),
-    ))
+    cookies.add(
+        Cookie::build("token", token)
+            .http_only(true)
+            .path("/")
+            .finish(),
+    );
+    Ok(Json(user))
 }
 
-pub fn validation_token(token: String) -> bool {
+pub fn validate_token(token: String) -> bool {
     match decode::<Claims>(&token, &KEYS.decoding, &Validation::new(Algorithm::HS256)) {
         Ok(_claims) => true,
         Err(_) => false,
