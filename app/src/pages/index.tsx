@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { Menu } from '@/components/Menu';
-
 const Home = () => {
   return (
     <>

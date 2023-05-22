@@ -167,6 +167,13 @@ export type CreateOrderMutationVariables = Exact<{
 
 export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: any, userId: number, total: number, createdAt: any, status: string, items: Array<{ __typename?: 'OrderItem', name: string, price: number, quantity: number }> } };
 
+export type GetUserInfoQueryVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type GetUserInfoQuery = { __typename?: 'Query', findUserByEmail: { __typename?: 'User', id: number, displayName: string, email: string, password: string, point: number } };
+
 export type ListProductQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -192,7 +199,22 @@ export const CreateOrderDocument = gql`
 
 export function useCreateOrderMutation() {
   return Urql.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument);
-};
+}
+export const GetUserInfoDocument = gql`
+    query getUserInfo($email: String!) {
+  findUserByEmail(email: $email) {
+    id
+    displayName
+    email
+    password
+    point
+  }
+}
+    `;
+
+export function useGetUserInfoQuery(options: Omit<Urql.UseQueryArgs<GetUserInfoQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetUserInfoQuery, GetUserInfoQueryVariables>({ query: GetUserInfoDocument, ...options });
+}
 export const ListProductDocument = gql`
     query listProduct {
   listProduct {
@@ -206,4 +228,4 @@ export const ListProductDocument = gql`
 
 export function useListProductQuery(options?: Omit<Urql.UseQueryArgs<ListProductQueryVariables>, 'query'>) {
   return Urql.useQuery<ListProductQuery, ListProductQueryVariables>({ query: ListProductDocument, ...options });
-};
+}

@@ -15,15 +15,10 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Product } from '../../generated/graphql';
 import { supabase } from '@/libs/supabase';
-import {
-  cartState,
-  cartIDState,
-  totalState,
-  cartItemState,
-} from '@/recoil/cart';
+import { cartIDState, totalState, cartItemState } from '@/recoil/cart';
 
 interface ItemState {
   isSelected: boolean;
@@ -45,7 +40,7 @@ export const MenuItem = (props: Product) => {
   let [total, setTotal] = useRecoilState(totalState);
   let [cartIndex, setCartIndex] = useRecoilState(cartIDState);
   let [isSelected, setIsSelected] = useState(false);
-  let [cartItem, setCartItem] = useRecoilState(cartItemState(props.id));
+  let setCartItem = useSetRecoilState(cartItemState(props.id));
 
   useEffect(() => {
     setCartItem({
@@ -55,19 +50,6 @@ export const MenuItem = (props: Product) => {
       price: props.price,
     });
   }, [itemState]);
-  const onClickAddCart = () => {
-    setIsSelected(true);
-    setCartIndex([...cartIndex, props.id]);
-    setTotal(total + props.price);
-    setItemState((prevState) => {
-      return {
-        ...prevState,
-        isSelected: true,
-        count: 1,
-        stock: prevState.stock - 1,
-      };
-    });
-  };
 
   const plus = () => {
     if (itemState.count < props.stock) {
@@ -82,15 +64,17 @@ export const MenuItem = (props: Product) => {
           stock: prevState.stock - 1,
         };
       });
+      setTotal((prevValue) => prevValue + props.price);
     }
-    setTotal((prevValue) => prevValue + props.price);
-    console.log(`plus cart ${JSON.stringify(cartItem)}`);
   };
 
   const minus = () => {
     if (itemState.count > 0) {
       if (itemState.count === 1) {
         setIsSelected(false);
+        setCartIndex((currVal) => {
+          return currVal.filter((i) => i !== props.id);
+        });
       }
       setItemState((prevState) => {
         return {
@@ -101,7 +85,6 @@ export const MenuItem = (props: Product) => {
       });
       setTotal(total - props.price);
     }
-    console.log(`minus cart ${JSON.stringify(cartItem)}`);
   };
 
   return (
@@ -123,11 +106,7 @@ export const MenuItem = (props: Product) => {
         <Flex>
           {props.stock > 0 ? (
             !isSelected ? (
-              <Button
-                variant="ghost"
-                colorScheme="blue"
-                onClick={() => onClickAddCart()}
-              >
+              <Button variant="ghost" colorScheme="blue" onClick={() => plus()}>
                 カートに入れる
               </Button>
             ) : (

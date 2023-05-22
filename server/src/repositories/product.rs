@@ -1,10 +1,11 @@
-use crate::entities::product::Product;
-use crate::repository_impl::product::ProductInput;
-use sqlx::Error;
+use crate::entities::product::{Product, ProductInput};
+use anyhow::Result;
+use async_trait::async_trait;
 
-#[axum::async_trait]
-pub trait ProductsRepository {
-    async fn save(&self, input: ProductInput) -> Result<Product, Error>;
-    async fn delete(&self, id: i32) -> Result<Product, Error>;
-    async fn list(&self) -> Result<Vec<Product>, Error>;
+#[async_trait]
+pub trait ProductsRepositoryTrait {
+    async fn save(&self, input: ProductInput) -> Result<Product>;
+    async fn delete(&self, id: i32) -> Result<Product>;
+    async fn list(&self) -> Result<Vec<Product>>;
+    async fn find_by_id(&self, id: i32) -> Result<Option<Product>>;
 }
