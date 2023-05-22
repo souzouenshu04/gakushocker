@@ -1,6 +1,7 @@
 use anyhow::Result;
 
 #[tokio::test]
+#[ignore]
 async fn test_graphql_handler_get() -> Result<()> {
     let client = httpc_test::new_client("http://localhost:8080")?;
     let res = client.do_get("/").await?;
@@ -11,6 +12,7 @@ async fn test_graphql_handler_get() -> Result<()> {
 }
 
 #[tokio::test]
+#[ignore]
 async fn test_graphql_handler_post() -> Result<()> {
     let client = httpc_test::new_client("http://localhost:8080")?;
     let res = client

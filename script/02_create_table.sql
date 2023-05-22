@@ -18,7 +18,7 @@ CREATE TABLE products (
 
 CREATE TABLE orders (
     id uuid PRIMARY KEY,
-    user_id int,
+    user_id int NOT NULL,
     total int NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
