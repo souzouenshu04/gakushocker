@@ -1,4 +1,3 @@
-import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import {
   Card,
   CardBody,
@@ -10,7 +9,6 @@ import {
   Image,
   Button,
   Flex,
-  IconButton,
   ButtonGroup,
   Box,
 } from '@chakra-ui/react';
@@ -19,6 +17,8 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Product } from '../../generated/graphql';
 import { supabase } from '@/libs/supabase';
 import { cartIDState, totalState, cartItemState } from '@/recoil/cart';
+import { PlusIcon } from '@/components/icons/PlusIcon';
+import { MinusIcon } from '@/components/icons/MinusIcon';
 
 interface ItemState {
   isSelected: boolean;
@@ -112,23 +112,15 @@ export const MenuItem = (props: Product) => {
             ) : (
               <Box>
                 <ButtonGroup gap={'2'} mx={'2'}>
-                  <IconButton
-                    icon={<AddIcon />}
-                    color={'blue.400'}
-                    aria-label={'add cart'}
-                    onClick={() => plus()}
-                  >
-                    plus icon
-                  </IconButton>
+                  <Button onClick={() => plus()}>
+                    <PlusIcon />
+                  </Button>
+
                   <Text fontSize={'2xl'}>{itemState.count}</Text>
-                  <IconButton
-                    icon={<MinusIcon />}
-                    color={'blue.400'}
-                    aria-label={'delete cart'}
-                    onClick={() => minus()}
-                  >
-                    minus icon
-                  </IconButton>
+
+                  <Button onClick={() => minus()}>
+                    <MinusIcon />
+                  </Button>
                 </ButtonGroup>
               </Box>
             )
