@@ -1,5 +1,3 @@
-extern crate core;
-
 mod database;
 
 mod entities {
@@ -26,6 +24,12 @@ mod repositories {
 }
 
 mod repository_impl {
+    pub mod order;
+    pub mod product;
+    pub mod user;
+}
+
+mod services {
     pub mod order;
     pub mod product;
     pub mod user;

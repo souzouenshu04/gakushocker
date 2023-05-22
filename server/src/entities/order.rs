@@ -4,6 +4,10 @@ use sqlx::postgres::{PgHasArrayType, PgTypeInfo};
 use sqlx::{FromRow, Type};
 use uuid::Uuid;
 
+#[cfg(test)]
+use fake::Dummy;
+
+#[cfg_attr(test, derive(Dummy))]
 #[derive(FromRow, Clone, SimpleObject, Debug, PartialEq)]
 pub struct Order {
     pub id: Uuid,
@@ -13,6 +17,7 @@ pub struct Order {
     pub created_at: NaiveDateTime,
 }
 
+#[cfg_attr(test, derive(Dummy))]
 #[derive(FromRow, Clone, SimpleObject, Type, Debug, PartialEq)]
 pub struct OrderItem {
     pub name: String,
@@ -30,17 +35,22 @@ impl PgHasArrayType for OrderItem {
     }
 }
 
+#[cfg_attr(test, derive(Dummy))]
 #[derive(InputObject, Debug, Clone)]
 pub struct OrderInput {
     pub id: Uuid,
+    #[cfg_attr(test, dummy(faker = "1"))]
     pub user_id: i32,
     pub total: i32,
     pub items: Vec<OrderItemInput>,
 }
 
+#[cfg_attr(test, derive(Dummy))]
 #[derive(FromRow, InputObject, Debug, Clone)]
 pub struct OrderItemInput {
+    #[cfg_attr(test, dummy(faker = "1"))]
     pub product_id: i32,
+    #[cfg_attr(test, dummy(faker = "1..100"))]
     pub quantity: i32,
 }
 
