@@ -19,9 +19,9 @@ import { supabase } from '@/libs/supabase';
 import { cartIDState, totalState, cartItemState } from '@/recoil/cart';
 import { PlusIcon } from '@/components/icons/PlusIcon';
 import { MinusIcon } from '@/components/icons/MinusIcon';
+import ProductInfo from '@/components/ProductInfo';
 
 interface ItemState {
-  isSelected: boolean;
   stock: number;
   count: number;
 }
@@ -32,14 +32,12 @@ export const MenuItem = (props: Product) => {
     .getPublicUrl(`${props.id}.webp`);
 
   let [itemState, setItemState] = useState<ItemState>({
-    isSelected: false,
     stock: props.stock,
     count: 0,
   });
 
   let [total, setTotal] = useRecoilState(totalState);
   let [cartIndex, setCartIndex] = useRecoilState(cartIDState);
-  let [isSelected, setIsSelected] = useState(false);
   let setCartItem = useSetRecoilState(cartItemState(props.id));
 
   useEffect(() => {
@@ -51,74 +49,68 @@ export const MenuItem = (props: Product) => {
     });
   }, [itemState]);
 
-  const plus = () => {
-    if (itemState.count < props.stock) {
-      if (itemState.count === 0) {
-        setIsSelected(true);
-        setCartIndex([...cartIndex, props.id]);
-      }
-      setItemState((prevState) => {
-        return {
-          ...prevState,
-          count: prevState.count + 1,
-          stock: prevState.stock - 1,
-        };
-      });
-      setTotal((prevValue) => prevValue + props.price);
+  const addToCart = () => {
+    if (itemState.count >= props.stock) {
+      return;
     }
+    const updatedCount = itemState.count + 1;
+    const updatedStock = itemState.stock - 1;
+    if (itemState.count === 0) {
+      setCartIndex([...cartIndex, props.id]);
+    }
+    setItemState((prevItemState) => ({
+        ...prevItemState,
+        count: updatedCount,
+        stock: updatedStock,
+    }));
+    setTotal((prevTotal) => prevTotal + props.price);
   };
 
-  const minus = () => {
-    if (itemState.count > 0) {
-      if (itemState.count === 1) {
-        setIsSelected(false);
-        setCartIndex((currVal) => {
-          return currVal.filter((i) => i !== props.id);
-        });
-      }
-      setItemState((prevState) => {
-        return {
-          ...prevState,
-          count: prevState.count - 1,
-          stock: prevState.stock + 1,
-        };
-      });
-      setTotal(total - props.price);
+  const removeFromCart = () => {
+    if (itemState.count <= 0) {
+      return;
     }
+    const updatedCount = itemState.count - 1;
+    const updatedStock = itemState.stock + 1;
+    if (itemState.count === 1) {
+      setCartIndex((currVal) => {
+        return currVal.filter((id) => id !== props.id);
+      });
+    }
+    setItemState((prevItemState) => ({
+        ...prevItemState,
+        count: updatedCount,
+        stock: updatedStock,
+    }));
+    setTotal((prevTotal) => prevTotal - props.price);
   };
 
   return (
     <Card maxW="sm" border="1px" borderColor="gray.300">
-      <CardBody>
-        <Image src={data.publicUrl} alt="商品の写真" borderRadius="lg" />
-        <Stack mt="6" spacing="3">
-          <Heading size="md">{props.name}</Heading>
-          <Text color="blue.600" fontSize="2xl">
-            ￥{props.price}
-          </Text>
-          <Text color="blue.600" fontSize="2xl">
-            残り {itemState.stock}
-          </Text>
-        </Stack>
-      </CardBody>
+      <ProductInfo
+        data = {data}
+        name = {props.name}
+        price = {props.price}
+        itemState = {itemState}
+      />
       <Divider />
       <CardFooter>
         <Flex>
           {props.stock > 0 ? (
-            !isSelected ? (
-              <Button variant="ghost" colorScheme="blue" onClick={() => plus()}>
+            itemState.count === 0 ? (
+              <Button variant="ghost" colorScheme="blue" onClick={() => addToCart()}>
                 カートに入れる
               </Button>
             ) : (
               <Box>
-                <ButtonGroup gap={'2'} mx={'2'}>
-                  <Button onClick={() => plus()}>
+                <ButtonGroup gap="2" mx="2">
+                  <Button onClick={() => addToCart()}>
                     <PlusIcon />
                   </Button>
 
-                  <Text fontSize={'2xl'}>{itemState.count}</Text>
+                  <Text fontSize="2xl">{itemState.count}</Text>
 
-                  <Button onClick={() => minus()}>
+                  <Button onClick={() => removeFromCart()}>
                     <MinusIcon />
                   </Button>
                 </ButtonGroup>
