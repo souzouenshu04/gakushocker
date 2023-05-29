@@ -22,9 +22,9 @@ jsonwebtoken = "8.2.0"
 once_cell = "1.17.1"
 async-trait = "0.1.68"
 tower-cookies = "0.9.0"
+tower = "0.4.13"
 
 [dev-dependencies]
 fake = { version = "2.6.1", features = ["chrono", "uuid", "derive"] }
 rand = "0.8.5"
-mockall = "0.11.4"
 httpc-test = "0.1.2"

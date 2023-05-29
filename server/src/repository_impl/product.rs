@@ -53,8 +53,7 @@ impl<'a> ProductsRepositoryTrait for ProductsRepository<'a> {
                 id, name, price, stock;
         "#;
         let mut tx = pool.begin().await.unwrap();
-        let deleted_product: Product = match sqlx::query_as(sql).bind(id).fetch_one(&mut tx).await
-        {
+        let deleted_product: Product = match sqlx::query_as(sql).bind(id).fetch_one(&mut tx).await {
             Ok(p) => p,
             Err(e) => {
                 tx.rollback().await?;
@@ -78,11 +77,11 @@ impl<'a> ProductsRepositoryTrait for ProductsRepository<'a> {
     async fn find_by_id(&self, id: i32) -> Result<Option<Product>> {
         let pool = self.pool;
         let sql = "SELECT * FROM products WHERE id=$1";
-        let product: Option<Product> =
-            match sqlx::query_as(sql).bind(id).fetch_optional(pool).await {
-                Ok(p) => p,
-                Err(e) => return Err(e.into()),
-            };
+        let product: Option<Product> = match sqlx::query_as(sql).bind(id).fetch_optional(pool).await
+        {
+            Ok(p) => p,
+            Err(e) => return Err(e.into()),
+        };
         Ok(product)
     }
 }

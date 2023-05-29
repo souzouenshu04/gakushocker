@@ -1,4 +1,5 @@
 mod database;
+mod error;
 
 mod entities {
     pub mod order;
@@ -12,8 +13,9 @@ pub mod controllers {
         pub mod mutation;
         pub mod query;
     }
-    mod auth {
-        pub mod auth;
+    pub mod auth;
+    mod middleware {
+        pub mod mw_auth;
     }
 }
 
