@@ -1,7 +1,7 @@
 use crate::constants;
 use crate::database;
 use crate::database::RepositoryProvider;
-use crate::entities::user::{User, UserInput};
+use crate::entities::user::UserInput;
 use crate::usecases::user;
 use axum::routing::post;
 use axum::{
@@ -14,7 +14,6 @@ use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, 
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use tower_cookies::{Cookie, Cookies};
 
 #[derive(Deserialize)]
 struct SignedUser {
@@ -28,6 +27,7 @@ struct AuthedBody {
     display_name: String,
     email: String,
     point: i32,
+    token: String,
 }
 
 #[derive(Debug)]
@@ -96,10 +96,7 @@ pub fn auth_router() -> Router {
         .route("/signup", post(sign_up))
 }
 
-async fn sign_in(
-    cookies: Cookies,
-    Json(payload): Json<SignedUser>,
-) -> Result<Json<User>, AuthError> {
+async fn sign_in(Json(payload): Json<SignedUser>) -> Result<Json<AuthedBody>, AuthError> {
     if payload.email.is_empty() || payload.password.is_empty() {
         return Err(AuthError::MissingCredentials);
     }
@@ -122,19 +119,16 @@ async fn sign_in(
     let token = encode(&Header::default(), &claims, &KEYS.encoding)
         .map_err(|_| AuthError::TokenCreation)
         .expect("missed encoding claims");
-    cookies.add(
-        Cookie::build("token", token)
-            .http_only(true)
-            .path("/")
-            .finish(),
-    );
-    Ok(Json(authorized_user))
+    Ok(Json(AuthedBody {
+        id: authorized_user.id,
+        display_name: authorized_user.display_name,
+        email: authorized_user.email,
+        point: authorized_user.point,
+        token,
+    }))
 }
 
-async fn sign_up(
-    cookies: Cookies,
-    Json(payload): Json<UserInput>,
-) -> Result<Json<User>, AuthError> {
+async fn sign_up(Json(payload): Json<UserInput>) -> Result<Json<AuthedBody>, AuthError> {
     if payload.email.is_empty() || payload.password.is_empty() {
         return Err(AuthError::MissingCredentials);
     }
@@ -148,13 +142,13 @@ async fn sign_up(
     let token = encode(&Header::default(), &claims, &KEYS.encoding)
         .map_err(|_| AuthError::TokenCreation)
         .expect("missed encoding claims");
-    cookies.add(
-        Cookie::build("token", token)
-            .http_only(true)
-            .path("/")
-            .finish(),
-    );
-    Ok(Json(user))
+    Ok(Json(AuthedBody {
+        id: user.id,
+        display_name: user.display_name,
+        email: user.email,
+        point: user.point,
+        token,
+    }))
 }
 
 pub fn validate_token(token: String) -> bool {
