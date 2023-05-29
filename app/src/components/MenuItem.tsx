@@ -17,10 +17,12 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Product } from '../../generated/graphql';
 import { supabase } from '@/libs/supabase';
 import { cartIDState, totalState, cartItemState } from '@/recoil/cart';
-import { PlusIcon } from '@/components/icons/PlusIcon';
-import { MinusIcon } from '@/components/icons/MinusIcon';
+// import { PlusIcon } from '@/components/icons/PlusIcon';
+// import { MinusIcon } from '@/components/icons/MinusIcon';
 import ProductInfo from '@/components/ProductInfo';
-
+import { IconButton } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
+import { MinusIcon } from '@chakra-ui/icons';
 interface ItemState {
   stock: number;
   count: number;
@@ -104,15 +106,15 @@ export const MenuItem = (props: Product) => {
             ) : (
               <Box>
                 <ButtonGroup gap="2" mx="2">
-                  <Button onClick={() => addToCart()}>
-                    <PlusIcon />
-                  </Button>
+                  <IconButton onClick={() => addToCart()} icon={<AddIcon />} color={'blue.400'} aria-label={'add cart'}>
+                    plus icon
+                  </IconButton>
 
                   <Text fontSize="2xl">{itemState.count}</Text>
 
-                  <Button onClick={() => removeFromCart()}>
-                    <MinusIcon />
-                  </Button>
+                    <IconButton onClick={() => removeFromCart()} icon={<MinusIcon />} color={'blue.400'} aria-label={'add cart'}>
+                      minus icon
+                    </IconButton>
                 </ButtonGroup>
               </Box>
             )
