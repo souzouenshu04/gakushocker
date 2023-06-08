@@ -7,9 +7,7 @@ import {
 } from '@chakra-ui/react';
 
 interface ProductInfoProps {
-  data: {
-    publicUrl: string;
-  };
+  publicUrl: string;
   name: string;
   price: number;
   itemState: {
@@ -18,11 +16,11 @@ interface ProductInfoProps {
 }
 
 const ProductInfo = (props: ProductInfoProps) => {
-  const { data, name, price, itemState } = props;
+  const { publicUrl, name, price, itemState } = props;
 
   return (
     <CardBody>
-      <Image src={data.publicUrl} alt="商品の写真" borderRadius="lg" />
+      <Image src={publicUrl} alt="商品の写真" borderRadius="lg" />
       <Stack mt="6" spacing="3">
         <Heading size="md">{name}</Heading>
         <Text color="blue.600" fontSize="2xl">

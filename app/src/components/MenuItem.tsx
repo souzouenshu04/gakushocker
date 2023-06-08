@@ -1,12 +1,8 @@
 import {
   Card,
-  CardBody,
-  Stack,
-  Heading,
   Text,
   Divider,
   CardFooter,
-  Image,
   Button,
   Flex,
   ButtonGroup,
@@ -17,13 +13,11 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Product } from '../../generated/graphql';
 import { supabase } from '@/libs/supabase';
 import { cartIDState, totalState, cartItemState } from '@/recoil/cart';
-// import { PlusIcon } from '@/components/icons/PlusIcon';
-// import { MinusIcon } from '@/components/icons/MinusIcon';
 import ProductInfo from '@/components/ProductInfo';
 import { IconButton } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
-import { MinusIcon } from '@chakra-ui/icons';
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 interface ItemState {
+  isSelected: boolean;
   stock: number;
   count: number;
 }
@@ -34,12 +28,14 @@ export const MenuItem = (props: Product) => {
     .getPublicUrl(`${props.id}.webp`);
 
   let [itemState, setItemState] = useState<ItemState>({
+    isSelected: false,
     stock: props.stock,
     count: 0,
   });
 
   let [total, setTotal] = useRecoilState(totalState);
   let [cartIndex, setCartIndex] = useRecoilState(cartIDState);
+  let [isSelected, setIsSelected] = useState(false);
   let setCartItem = useSetRecoilState(cartItemState(props.id));
 
   useEffect(() => {
@@ -58,6 +54,7 @@ export const MenuItem = (props: Product) => {
     const updatedCount = itemState.count + 1;
     const updatedStock = itemState.stock - 1;
     if (itemState.count === 0) {
+      setIsSelected(true);
       setCartIndex([...cartIndex, props.id]);
     }
     setItemState((prevItemState) => ({
@@ -75,6 +72,7 @@ export const MenuItem = (props: Product) => {
     const updatedCount = itemState.count - 1;
     const updatedStock = itemState.stock + 1;
     if (itemState.count === 1) {
+      setIsSelected(false);
       setCartIndex((currVal) => {
         return currVal.filter((id) => id !== props.id);
       });
@@ -90,7 +88,7 @@ export const MenuItem = (props: Product) => {
   return (
     <Card maxW="sm" border="1px" borderColor="gray.300">
       <ProductInfo
-        data = {data}
+        publicUrl = {data.publicUrl}
         name = {props.name}
         price = {props.price}
         itemState = {itemState}
@@ -99,7 +97,7 @@ export const MenuItem = (props: Product) => {
       <CardFooter>
         <Flex>
           {props.stock > 0 ? (
-            itemState.count === 0 ? (
+            !isSelected ? (
               <Button variant="ghost" colorScheme="blue" onClick={() => addToCart()}>
                 カートに入れる
               </Button>
