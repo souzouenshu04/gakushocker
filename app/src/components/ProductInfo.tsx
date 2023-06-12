@@ -10,13 +10,11 @@ interface ProductInfoProps {
   publicUrl: string;
   name: string;
   price: number;
-  itemState: {
-    stock: number;
-  };
+  stock: number;
 }
 
 const ProductInfo = (props: ProductInfoProps) => {
-  const { publicUrl, name, price, itemState } = props;
+  const { publicUrl, name, price, stock} = props;
 
   return (
     <CardBody>
@@ -27,7 +25,7 @@ const ProductInfo = (props: ProductInfoProps) => {
           ￥{price}
         </Text>
         <Text color="blue.600" fontSize="2xl">
-          残り {itemState.stock}
+          残り {stock}
         </Text>
       </Stack>
     </CardBody>

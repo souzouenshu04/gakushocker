@@ -91,7 +91,7 @@ export const MenuItem = (props: Product) => {
         publicUrl = {data.publicUrl}
         name = {props.name}
         price = {props.price}
-        itemState = {itemState}
+        stock = {itemState.stock}
       />
       <Divider />
       <CardFooter>
