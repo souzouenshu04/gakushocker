@@ -1,10 +1,4 @@
-import {
-  CardBody,
-  Image,
-  Stack,
-  Heading,
-  Text,
-} from '@chakra-ui/react';
+import { CardBody, Image, Stack, Heading, Text } from '@chakra-ui/react';
 
 interface ProductInfoProps {
   publicUrl: string;
@@ -14,7 +8,7 @@ interface ProductInfoProps {
 }
 
 const ProductInfo = (props: ProductInfoProps) => {
-  const { publicUrl, name, price, stock} = props;
+  const { publicUrl, name, price, stock } = props;
 
   return (
     <CardBody>

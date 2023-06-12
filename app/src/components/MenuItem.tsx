@@ -58,9 +58,9 @@ export const MenuItem = (props: Product) => {
       setCartIndex([...cartIndex, props.id]);
     }
     setItemState((prevItemState) => ({
-        ...prevItemState,
-        count: updatedCount,
-        stock: updatedStock,
+      ...prevItemState,
+      count: updatedCount,
+      stock: updatedStock,
     }));
     setTotal((prevTotal) => prevTotal + props.price);
   };
@@ -78,9 +78,9 @@ export const MenuItem = (props: Product) => {
       });
     }
     setItemState((prevItemState) => ({
-        ...prevItemState,
-        count: updatedCount,
-        stock: updatedStock,
+      ...prevItemState,
+      count: updatedCount,
+      stock: updatedStock,
     }));
     setTotal((prevTotal) => prevTotal - props.price);
   };
@@ -88,31 +88,45 @@ export const MenuItem = (props: Product) => {
   return (
     <Card maxW="sm" border="1px" borderColor="gray.300">
       <ProductInfo
-        publicUrl = {data.publicUrl}
-        name = {props.name}
-        price = {props.price}
-        stock = {itemState.stock}
+        publicUrl={data.publicUrl}
+        name={props.name}
+        price={props.price}
+        stock={itemState.stock}
       />
       <Divider />
       <CardFooter>
         <Flex>
           {props.stock > 0 ? (
             !isSelected ? (
-              <Button variant="ghost" colorScheme="blue" onClick={() => addToCart()}>
+              <Button
+                variant="ghost"
+                colorScheme="blue"
+                onClick={() => addToCart()}
+              >
                 カートに入れる
               </Button>
             ) : (
               <Box>
                 <ButtonGroup gap="2" mx="2">
-                  <IconButton onClick={() => addToCart()} icon={<AddIcon />} color={'blue.400'} aria-label={'add cart'}>
+                  <IconButton
+                    onClick={() => addToCart()}
+                    icon={<AddIcon />}
+                    color={'blue.400'}
+                    aria-label={'add cart'}
+                  >
                     plus icon
                   </IconButton>
 
                   <Text fontSize="2xl">{itemState.count}</Text>
 
-                    <IconButton onClick={() => removeFromCart()} icon={<MinusIcon />} color={'blue.400'} aria-label={'add cart'}>
-                      minus icon
-                    </IconButton>
+                  <IconButton
+                    onClick={() => removeFromCart()}
+                    icon={<MinusIcon />}
+                    color={'blue.400'}
+                    aria-label={'add cart'}
+                  >
+                    minus icon
+                  </IconButton>
                 </ButtonGroup>
               </Box>
             )
