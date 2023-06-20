@@ -44,7 +44,6 @@ const Payment = () => {
       input: {
         id: uuidv4(),
         items: orderItems,
-        status: 'UNPAID',
         total: total,
         userId: userID,
       },

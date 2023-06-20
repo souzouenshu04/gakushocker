@@ -13,24 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /**
-   * ISO 8601 combined date and time without timezone.
-   *
-   * # Examples
-   *
-   * * `2015-07-01T08:59:60.123`,
-   */
   NaiveDateTime: any;
-  /**
-   * A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as
-   * Strings within GraphQL. UUIDs are used to assign unique identifiers to
-   * entities without requiring a central allocating authority.
-   *
-   * # References
-   *
-   * * [Wikipedia: Universally Unique Identifier](http://en.wikipedia.org/wiki/Universally_unique_identifier)
-   * * [RFC4122: A Universally Unique IDentifier (UUID) URN Namespace](http://tools.ietf.org/html/rfc4122)
-   */
   UUID: any;
 };
 
@@ -79,7 +62,6 @@ export type Order = {
   createdAt: Scalars['NaiveDateTime'];
   id: Scalars['UUID'];
   items: Array<OrderItem>;
-  status: Scalars['String'];
   total: Scalars['Int'];
   userId: Scalars['Int'];
 };
@@ -87,7 +69,6 @@ export type Order = {
 export type OrderInput = {
   id: Scalars['UUID'];
   items: Array<OrderItemInput>;
-  status: Scalars['String'];
   total: Scalars['Int'];
   userId: Scalars['Int'];
 };
@@ -120,10 +101,10 @@ export type ProductInput = {
 
 export type Query = {
   __typename?: 'Query';
-  findAllOrder: Array<Order>;
-  findOrderById: Order;
-  findProductById: Product;
-  findUserByEmail: User;
+  findOrderById?: Maybe<Order>;
+  findProductById?: Maybe<Product>;
+  findUserByEmail?: Maybe<User>;
+  findUserById?: Maybe<User>;
   listOrder: Array<Order>;
   listProduct: Array<Product>;
   listUser: Array<User>;
@@ -144,11 +125,17 @@ export type QueryFindUserByEmailArgs = {
   email: Scalars['String'];
 };
 
+
+export type QueryFindUserByIdArgs = {
+  id: Scalars['Int'];
+};
+
 export type User = {
   __typename?: 'User';
   displayName: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['Int'];
+  isAdmin: Scalars['Boolean'];
   password: Scalars['String'];
   point: Scalars['Int'];
 };
@@ -156,6 +143,7 @@ export type User = {
 export type UserInput = {
   displayName: Scalars['String'];
   email: Scalars['String'];
+  isAdmin: Scalars['Boolean'];
   password: Scalars['String'];
   point: Scalars['Int'];
 };
@@ -165,14 +153,14 @@ export type CreateOrderMutationVariables = Exact<{
 }>;
 
 
-export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: any, userId: number, total: number, createdAt: any, status: string, items: Array<{ __typename?: 'OrderItem', name: string, price: number, quantity: number }> } };
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: any, userId: number, total: number, createdAt: any, items: Array<{ __typename?: 'OrderItem', name: string, price: number, quantity: number }> } };
 
 export type GetUserInfoQueryVariables = Exact<{
   email: Scalars['String'];
 }>;
 
 
-export type GetUserInfoQuery = { __typename?: 'Query', findUserByEmail: { __typename?: 'User', id: number, displayName: string, email: string, password: string, point: number } };
+export type GetUserInfoQuery = { __typename?: 'Query', findUserByEmail?: { __typename?: 'User', id: number, displayName: string, email: string, password: string, point: number } | null };
 
 export type ListProductQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -192,14 +180,13 @@ export const CreateOrderDocument = gql`
     }
     total
     createdAt
-    status
   }
 }
     `;
 
 export function useCreateOrderMutation() {
   return Urql.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument);
-}
+};
 export const GetUserInfoDocument = gql`
     query getUserInfo($email: String!) {
   findUserByEmail(email: $email) {
@@ -214,7 +201,7 @@ export const GetUserInfoDocument = gql`
 
 export function useGetUserInfoQuery(options: Omit<Urql.UseQueryArgs<GetUserInfoQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUserInfoQuery, GetUserInfoQueryVariables>({ query: GetUserInfoDocument, ...options });
-}
+};
 export const ListProductDocument = gql`
     query listProduct {
   listProduct {
@@ -228,4 +215,4 @@ export const ListProductDocument = gql`
 
 export function useListProductQuery(options?: Omit<Urql.UseQueryArgs<ListProductQueryVariables>, 'query'>) {
   return Urql.useQuery<ListProductQuery, ListProductQueryVariables>({ query: ListProductDocument, ...options });
-}
+};

@@ -10,7 +10,7 @@
     "fmt": "prettier --write './src/**/*.{tsx, ts}'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --require dotenv/config --config codegen.yml"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",

@@ -1,4 +1,4 @@
-use crate::controllers::auth::auth_router;
+use crate::controllers::authentication::auth::auth_router;
 use crate::controllers::middleware::mw_auth;
 use crate::controllers::presenters::mutation::Mutation;
 use crate::controllers::presenters::query::Query;

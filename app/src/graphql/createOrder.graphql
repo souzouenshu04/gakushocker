@@ -9,6 +9,5 @@ mutation createOrder($input: OrderInput!) {
         }
         total
         createdAt
-        status
     }
 }
