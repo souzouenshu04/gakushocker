@@ -1,3 +1,4 @@
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import {
   Card,
   Text,
@@ -7,15 +8,13 @@ import {
   Flex,
   ButtonGroup,
   Box,
-} from '@chakra-ui/react';
+ IconButton } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Product } from '../../generated/graphql';
+import ProductInfo from '@/components/ProductInfo';
 import { supabase } from '@/libs/supabase';
 import { cartIDState, totalState, cartItemState } from '@/recoil/cart';
-import ProductInfo from '@/components/ProductInfo';
-import { IconButton } from '@chakra-ui/react';
-import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 interface ItemState {
   isSelected: boolean;
   stock: number;

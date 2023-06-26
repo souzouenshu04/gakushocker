@@ -51,14 +51,14 @@ const Home = ({
   let [menuQueryResult, _reExecuteMenuQuery] = useQuery({
     query: ListProductDocument,
     context: useMemo(
-        () => ({
-          fetchOptions: {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+      () => ({
+        fetchOptions: {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        }),
-        [token]
+        },
+      }),
+      [token]
     ),
   });
   let [getUserInfoQuery, _reExecuteGetUserInfoQuery] = useQuery({
