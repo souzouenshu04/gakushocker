@@ -6,6 +6,7 @@ export interface ReservedUser {
   email: string;
   password: string;
   point: number;
+  token: string;
 }
 
 export const toCamel = (reservedUser: ReservedUser) => {
