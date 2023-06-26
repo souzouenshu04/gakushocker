@@ -9,10 +9,10 @@ export interface ReservedUser {
   token: string;
 }
 
-export const toCamel = (reservedUser: ReservedUser) => {
-  let user: User = {
+export const toCamel = (reservedUser: ReservedUser): User => {
+   return {
     displayName: reservedUser.display_name,
-    ...reservedUser,
-  };
-  return user;
+     isAdmin: false,
+     ...reservedUser
+   };
 };

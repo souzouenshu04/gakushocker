@@ -22,7 +22,6 @@ type Order {
     items: [OrderItem!]!
     total: Int!
     createdAt: NaiveDateTime!
-    status: String!
 }
 
 input OrderInput {
@@ -30,7 +29,6 @@ input OrderInput {
     userId: Int!
     total: Int!
     items: [OrderItemInput!]!
-    status: String!
 }
 
 type OrderItem {
@@ -86,6 +84,7 @@ type User {
     email: String!
     password: String!
     point: Int!
+    isAdmin: Boolean!
 }
 
 input UserInput {
@@ -93,6 +92,7 @@ input UserInput {
     email: String!
     password: String!
     point: Int!
+    isAdmin: Boolean!
 }
 
 schema {

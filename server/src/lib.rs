@@ -13,7 +13,9 @@ pub mod controllers {
         pub mod mutation;
         pub mod query;
     }
-    pub mod auth;
+    mod authentication {
+        pub mod auth;
+    }
     mod middleware {
         pub mod mw_auth;
     }

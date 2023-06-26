@@ -1,4 +1,4 @@
-use crate::controllers::auth::validate_token;
+use crate::controllers::authentication::auth::validate_token;
 use axum::headers::authorization::Bearer;
 use axum::headers::{Authorization, HeaderMapExt};
 use axum::{
