@@ -215,4 +215,6 @@ export const ListProductDocument = gql`
 
 export function useListProductQuery(options?: Omit<Urql.UseQueryArgs<ListProductQueryVariables>, 'query'>) {
   return Urql.useQuery<ListProductQuery, ListProductQueryVariables>({ query: ListProductDocument, ...options });
+
 };
+
