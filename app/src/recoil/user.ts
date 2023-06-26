@@ -9,6 +9,7 @@ export const userState = atom<User>({
     email: '',
     password: '',
     point: 0,
+    isAdmin: false
   },
 });
 
