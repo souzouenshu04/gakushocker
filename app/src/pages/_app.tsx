@@ -5,7 +5,7 @@ import { Provider } from 'urql';
 import { Layout } from '@/layout/Layout';
 import { client } from '@/libs/graphql';
 
-export default function App({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider>
       <RecoilRoot>
@@ -17,4 +17,6 @@ export default function App({ Component, pageProps }: AppProps) {
       </RecoilRoot>
     </ChakraProvider>
   );
-}
+};
+
+export default App;

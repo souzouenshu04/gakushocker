@@ -1,5 +1,9 @@
 overwrite: true
-schema: "./schema.graphql"
+schema:
+  - "http://api:8080":
+      headers: {
+        Authorization: Bearer ${AUTH_TOKEN}
+      }
 documents: "./src/graphql/"
 generates:
   ./generated/graphql.tsx:

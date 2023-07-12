@@ -24,6 +24,10 @@ src
 │   ├── order.rs
 │   ├── product.rs
 │   └── user.rs
+├── services
+│   ├── order.rs
+│   ├── product.rs
+│   └── user.rs
 └── usecases
     ├── order.rs
     ├── product.rs

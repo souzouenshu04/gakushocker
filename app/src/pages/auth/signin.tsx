@@ -12,18 +12,21 @@ import {
 } from '@chakra-ui/react';
 import axios, { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
+import { parseCookies, setCookie } from 'nookies';
 import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { ReservedUser, toCamel } from '@/models/ReservedUser';
-import { isSigninState } from '@/recoil/signin';
+import { isSigninState, tokenState } from '@/recoil/signin';
 import { userState } from '@/recoil/user';
 
 const Signin = () => {
+  let cookies = parseCookies();
   let client = axios.create({ withCredentials: true });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const setSignin = useSetRecoilState(isSigninState);
   const setUser = useSetRecoilState(userState);
+  const setToken = useSetRecoilState(tokenState);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
   const auth = () => {
@@ -36,6 +39,13 @@ const Signin = () => {
         setSignin(true);
         console.log(res.data);
         setUser(toCamel(res.data));
+        setToken(res.data.token);
+        setCookie(cookies, 'token', res.data.token, {
+          path: '/',
+        });
+        setCookie(cookies, 'email', res.data.email, {
+          path: '/',
+        });
         router.push('/');
       });
   };

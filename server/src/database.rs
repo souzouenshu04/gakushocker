@@ -1,24 +1,25 @@
 use crate::constants;
-use crate::repository_impl::order::OrdersImpl;
-use crate::repository_impl::product::ProductsImpl;
-use crate::repository_impl::user::UsersImpl;
+use crate::repository_impl::order::OrdersRepository;
+use crate::repository_impl::product::ProductsRepository;
+use crate::repository_impl::user::UsersRepository;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{Pool, Postgres};
+use std::sync::Arc;
 
 pub type ConnectionPool = Pool<Postgres>;
 
 #[derive(Clone)]
-pub struct RepositoryProvider(pub ConnectionPool);
+pub struct RepositoryProvider(pub Arc<ConnectionPool>);
 
 impl RepositoryProvider {
-    pub fn orders(&self) -> OrdersImpl {
-        OrdersImpl { pool: &self.0 }
+    pub fn orders(&self) -> OrdersRepository {
+        OrdersRepository { pool: &self.0 }
     }
-    pub fn products(&self) -> ProductsImpl {
-        ProductsImpl { pool: &self.0 }
+    pub fn products(&self) -> ProductsRepository {
+        ProductsRepository { pool: &self.0 }
     }
-    pub fn users(&self) -> UsersImpl {
-        UsersImpl { pool: &self.0 }
+    pub fn users(&self) -> UsersRepository {
+        UsersRepository { pool: &self.0 }
     }
 }
 
@@ -28,5 +29,6 @@ pub async fn db_pool() -> ConnectionPool {
         .max_connections(200)
         .connect(&db_url)
         .await
-        .expect(format!("missing db {}", db_url).as_str())
+        // .expect(format!("missing db {}", db_url).as_str())
+        .unwrap_or_else(|_| panic!("missing db {}", db_url))
 }

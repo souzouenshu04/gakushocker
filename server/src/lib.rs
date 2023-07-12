@@ -1,6 +1,5 @@
-extern crate core;
-
 mod database;
+mod error;
 
 mod entities {
     pub mod order;
@@ -14,8 +13,11 @@ pub mod controllers {
         pub mod mutation;
         pub mod query;
     }
-    mod auth {
+    mod authentication {
         pub mod auth;
+    }
+    mod middleware {
+        pub mod mw_auth;
     }
 }
 
@@ -26,6 +28,12 @@ mod repositories {
 }
 
 mod repository_impl {
+    pub mod order;
+    pub mod product;
+    pub mod user;
+}
+
+mod services {
     pub mod order;
     pub mod product;
     pub mod user;

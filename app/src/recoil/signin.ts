@@ -6,3 +6,8 @@ export const isSigninState = atom({
   key: 'signedState',
   default: false,
 });
+
+export const tokenState = atom({
+  key: 'tokenState',
+  default: ""
+})
