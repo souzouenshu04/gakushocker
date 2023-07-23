@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from 'urql';
-import { ListProductDocument, Product } from '../../../generated/graphql';
+import { ListProductDocument } from '../../../generated/graphql';
 import { ProductInfoList } from '@/components/admin/ProductInfoList';
 import { isSigninState, tokenState } from '@/recoil/signin';
 

@@ -23,14 +23,12 @@ import {
   useRecoilState,
   useRecoilValue,
   useResetRecoilState,
-  useSetRecoilState,
 } from 'recoil';
 import { isSigninState, tokenState } from '@/recoil/signin';
 import { userState } from '@/recoil/user';
 
 export const Header = () => {
-  let [isSignin, setIsSignin] = useRecoilState(isSigninState);
-  let setToken = useSetRecoilState(tokenState);
+  let [isSignin, _setIsSignin] = useRecoilState(isSigninState);
   let user = useRecoilValue(userState);
   const router = useRouter();
 

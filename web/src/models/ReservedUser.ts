@@ -1,5 +1,3 @@
-import { User } from '../../generated/graphql';
-
 export interface ReservedUser {
   id: number;
   displayName: string;

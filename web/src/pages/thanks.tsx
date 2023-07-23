@@ -1,4 +1,4 @@
-import { Image, Button, Container, Box, Stack } from '@chakra-ui/react';
+import { Image, Button, Container, Stack } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 
 const Thanks = () => {

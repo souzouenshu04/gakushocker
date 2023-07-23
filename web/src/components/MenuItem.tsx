@@ -26,7 +26,7 @@ export const MenuItem = (props: Product) => {
     count: 0,
   });
 
-  const [total, setTotal] = useRecoilState(totalState);
+  const setTotal = useSetRecoilState(totalState);
   const [cartIndex, setCartIndex] = useRecoilState(cartIDState);
   const setCartItem = useSetRecoilState(cartItemState(props.id));
   const nowCartState = useRecoilValue(cartState);
@@ -55,28 +55,6 @@ export const MenuItem = (props: Product) => {
       stock: updatedStock,
     }));
     setTotal((prevTotal) => prevTotal + props.price);
-    setCookie(null, 'cart', JSON.stringify(nowCartState), {
-      path: '/',
-    });
-  };
-
-  const removeFromCart = () => {
-    if (itemState.count <= 0) {
-      return;
-    }
-    const updatedCount = itemState.count - 1;
-    const updatedStock = itemState.stock + 1;
-    if (itemState.count === 1) {
-      setCartIndex((currVal) => {
-        return currVal.filter((id) => id !== props.id);
-      });
-    }
-    setItemState((prevItemState) => ({
-      ...prevItemState,
-      count: updatedCount,
-      stock: updatedStock,
-    }));
-    setTotal((prevTotal) => prevTotal - props.price);
     setCookie(null, 'cart', JSON.stringify(nowCartState), {
       path: '/',
     });
