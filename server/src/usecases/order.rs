@@ -16,14 +16,16 @@ pub async fn create(repo: &RepositoryProvider, input: OrderInput) -> Result<Orde
         Some(u) => u,
         None => return Err(Error::RowNotFound.into()),
     };
-    let updated_user = UserInput {
-        display_name: found_user.display_name,
-        email: found_user.email,
-        password: found_user.password,
-        point: found_user.point - input.total,
-        is_admin: found_user.is_admin,
-    };
-    UserServices::save(repo.users(), updated_user).await?;
+    if input.is_use_point {
+        let updated_user = UserInput {
+            display_name: found_user.display_name,
+            email: found_user.email,
+            password: found_user.password,
+            point: found_user.point - input.total,
+            is_admin: found_user.is_admin,
+        };
+        UserServices::save(repo.users(), updated_user).await?;
+    }
     let saved_order = OrderServices::save(repo.orders(), input.clone()).await?;
     let order_items = input.items.iter().map(|item| async move {
         if let Some(saved_item) = ProductServices::find_by_id(repo.products(), item.product_id)
@@ -57,6 +59,30 @@ pub async fn list_order(repo: &RepositoryProvider) -> Result<Vec<Order>> {
     OrderServices::list(repo.orders()).await
 }
 
+pub async fn list_order_by_specified_user(
+    repo: &RepositoryProvider,
+    user_id: i32,
+) -> Result<Vec<Order>> {
+    let all_order = OrderServices::list(repo.orders()).await?;
+    Ok(all_order
+        .into_iter()
+        .filter(|o| o.user_id == user_id)
+        .collect())
+}
+
+pub async fn find_recent_order_by_user_id(
+    repo: &RepositoryProvider,
+    user_id: i32,
+) -> Result<Order> {
+    let all_order = OrderServices::list(repo.orders()).await?;
+    let mut specified_users_order: Vec<Order> = all_order
+        .into_iter()
+        .filter(|o| o.user_id == user_id)
+        .collect();
+    specified_users_order.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+    Ok(specified_users_order[0].clone())
+}
+
 #[cfg(test)]
 mod tests {
     use crate::database::{db_pool, RepositoryProvider};
@@ -81,6 +107,7 @@ mod tests {
                 product_id: 4,
                 quantity: 1,
             }],
+            is_use_point: false,
         };
         let created_order = order::create(&repo, input.clone()).await?;
         let expected_order = Order {
@@ -120,6 +147,7 @@ mod tests {
                 product_id: 4,
                 quantity: 1,
             }],
+            is_use_point: false,
         };
         let id = input.id.clone();
         OrderService::save(repo.orders(), input.clone()).await?;
