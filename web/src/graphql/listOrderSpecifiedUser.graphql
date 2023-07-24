@@ -1,0 +1,13 @@
+query listOrderSpecifiedUser($userId: Int!) {
+    findRecentOrderByUserId(userId: $userId) {
+        id
+        userId
+        items {
+            name
+            price
+            quantity
+        }
+        total
+        createdAt
+    }
+}

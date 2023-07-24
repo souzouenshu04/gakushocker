@@ -1,0 +1,10 @@
+query getUserInfo($email: String!) {
+    findUserByEmail(email: $email) {
+        id
+        displayName
+        email
+        password
+        point
+        isAdmin
+    }
+}

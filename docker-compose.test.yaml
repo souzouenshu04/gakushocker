@@ -22,9 +22,9 @@ services:
       dockerfile: ./server/Dockerfile
     container_name: api
     volumes:
-      - ./server:/app
+      - ./server:/web
       - cargo-cache:/usr/local/cargo/registry
-      - target-cache:/app/target
+      - target-cache:/web/target
     ports:
       - "8080:8080"
     env_file:
