@@ -12,6 +12,7 @@ services:
       - ./script:/docker-entrypoint-initdb.d
       - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
     environment:
+      - TZ=Asia/Tokyo
       - POSTGRES_PASSWORD=passw0rd
     networks:
       dev-network:
@@ -35,16 +36,16 @@ services:
     networks:
       dev-network:
 
-  app:
+  web:
     build:
       context: .
-      dockerfile: app/Dockerfile
+      dockerfile: web/Dockerfile
     platform: linux/arm64
     volumes:
       - /usr/src/app/.next
-      - ./app:/usr/src/app
-      - /usr/src/app/node_modules
-    container_name: app
+      - ./web:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    container_name: web
     tty: true
     environment:
       - WATCHPACK_POLLING=true
@@ -59,6 +60,7 @@ volumes:
   db-store:
   cargo-cache:
   target-cache:
+  node_modules:
 
 networks:
   dev-network:

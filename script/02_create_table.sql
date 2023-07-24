@@ -82,4 +82,5 @@ INSERT INTO products (name, price, stock)
 
 INSERT INTO users (display_name, email, password, point, is_admin)
     VALUES
-        ('demo', 'demo', 'demo', 10000, true);
+        ('demo', 'demo', 'demo', 10000, false),
+        ('admin', 'admin', 'admin', 10000, true);

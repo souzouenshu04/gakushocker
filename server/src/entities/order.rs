@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use async_graphql::{InputObject, SimpleObject};
 use chrono::NaiveDateTime;
 use sqlx::postgres::{PgHasArrayType, PgTypeInfo};
@@ -6,9 +7,11 @@ use uuid::Uuid;
 
 #[cfg(test)]
 use fake::Dummy;
+use serde::{Deserialize, Serialize};
 
 #[cfg_attr(test, derive(Dummy))]
-#[derive(FromRow, Clone, SimpleObject, Debug, PartialEq)]
+#[derive(FromRow, Clone, SimpleObject, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Order {
     pub id: Uuid,
     pub user_id: i32,
@@ -18,7 +21,7 @@ pub struct Order {
 }
 
 #[cfg_attr(test, derive(Dummy))]
-#[derive(FromRow, Clone, SimpleObject, Type, Debug, PartialEq)]
+#[derive(FromRow, Clone, SimpleObject, Type, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderItem {
     pub name: String,
     pub price: i32,
@@ -43,6 +46,7 @@ pub struct OrderInput {
     pub user_id: i32,
     pub total: i32,
     pub items: Vec<OrderItemInput>,
+    pub is_use_point: bool,
 }
 
 #[cfg_attr(test, derive(Dummy))]

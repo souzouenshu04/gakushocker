@@ -9,7 +9,8 @@ mod entities {
 
 pub mod controllers {
     pub mod router;
-    mod presenters {
+    pub mod websocket;
+    pub mod presenters {
         pub mod mutation;
         pub mod query;
     }
@@ -46,6 +47,8 @@ mod usecases {
 }
 
 pub mod constants {
+    pub const DEFAULT_POINT: i32 = 0;
+
     use dotenvy::dotenv;
     pub fn db_url() -> String {
         dotenv().ok();

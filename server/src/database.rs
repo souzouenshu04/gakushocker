@@ -29,6 +29,5 @@ pub async fn db_pool() -> ConnectionPool {
         .max_connections(200)
         .connect(&db_url)
         .await
-        // .expect(format!("missing db {}", db_url).as_str())
         .unwrap_or_else(|_| panic!("missing db {}", db_url))
 }

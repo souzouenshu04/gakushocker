@@ -1,4 +1,5 @@
 use crate::constants;
+use crate::constants::DEFAULT_POINT;
 use crate::database;
 use crate::database::RepositoryProvider;
 use crate::entities::user::UserInput;
@@ -22,12 +23,14 @@ struct SignedUser {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 struct AuthedBody {
     id: i32,
     display_name: String,
     email: String,
     point: i32,
     token: String,
+    is_admin: bool,
 }
 
 #[derive(Debug)]
@@ -125,6 +128,7 @@ async fn sign_in(Json(payload): Json<SignedUser>) -> Result<Json<AuthedBody>, Au
         email: authorized_user.email,
         point: authorized_user.point,
         token,
+        is_admin: authorized_user.is_admin,
     }))
 }
 
@@ -146,8 +150,9 @@ async fn sign_up(Json(payload): Json<UserInput>) -> Result<Json<AuthedBody>, Aut
         id: user.id,
         display_name: user.display_name,
         email: user.email,
-        point: user.point,
+        point: DEFAULT_POINT,
         token,
+        is_admin: user.is_admin,
     }))
 }
 

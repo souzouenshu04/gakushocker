@@ -85,7 +85,7 @@ impl<'a> OrdersRepositoryTrait for OrdersRepository<'a> {
 
     async fn list(&self) -> Result<Vec<Order>> {
         let pool = self.pool;
-        let sql = "SELECT * FROM order_view";
+        let sql = "SELECT id, user_id, items, total, created_at at time zone 'UTC' at time zone 'Asia/Tokyo' as created_at FROM order_view";
         let orders = match sqlx::query_as(sql).fetch_all(pool).await {
             Ok(o_vec) => o_vec,
             Err(e) => return Err(e.into()),
@@ -95,7 +95,7 @@ impl<'a> OrdersRepositoryTrait for OrdersRepository<'a> {
 
     async fn find_by_id(&self, id: Uuid) -> Result<Option<Order>> {
         let pool = self.pool;
-        let sql = "SELECT * FROM order_view WHERE id=$1";
+        let sql = "SELECT id, user_id, items, total, created_at at time zone 'UTC' at time zone 'Asia/Tokyo' as created_at FROM order_view WHERE id=$1";
         let order = match sqlx::query_as(sql).bind(id).fetch_optional(pool).await {
             Ok(o) => o,
             Err(e) => return Err(e.into()),
@@ -124,6 +124,7 @@ mod tests {
                 product_id: 1,
                 quantity: 1,
             }],
+            is_use_point: false,
         };
 
         let tx = pool.begin().await?;

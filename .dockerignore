@@ -3,7 +3,8 @@ server/target
 server/schema.sql
 table.drawio
 .idea
-app/dist
-app/node_modules
-app/yarn.lock
+web/dist
+web/node_modules
+web/yarn.lock
 README.md
+docs/

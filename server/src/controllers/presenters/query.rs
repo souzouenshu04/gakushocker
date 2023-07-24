@@ -47,4 +47,18 @@ impl Query {
         let repo = ctx.data::<RepositoryProvider>().unwrap();
         user::find_user_by_user_id(repo, id).await
     }
+
+    async fn list_order_by_specified_user(
+        &self,
+        ctx: &Context<'_>,
+        user_id: i32,
+    ) -> Result<Vec<Order>> {
+        let repo = ctx.data::<RepositoryProvider>().unwrap();
+        order::list_order_by_specified_user(repo, user_id).await
+    }
+
+    async fn find_recent_order_by_user_id(&self, ctx: &Context<'_>, user_id: i32) -> Result<Order> {
+        let repo = ctx.data::<RepositoryProvider>().unwrap();
+        order::find_recent_order_by_user_id(repo, user_id).await
+    }
 }
